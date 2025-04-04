@@ -4,12 +4,14 @@ import sachModel from "../../models/sachModel";
 
 import { error } from "console";
 import {laySachTheoMaSach} from "../../API/sachAPI";
-import HinhAnhSanPham from "./components/hinhAnhSanPham";
-import DanhSachSanPham from "./danhSachSanPham";
-import DanhGiaSanPham from "./components/danhGiaSanPham";
+
+import renderRating from "../Utils/renderRating";
+import dinhDangSo from "../Utils/dinhDangSo";
+import DanhGiaSanPham from "../products/components/danhGiaSanPham";
+import HinhAnhSanPham from "../products/components/hinhAnhSanPham";
 
 
-const ChiTietSanPham: React.FC = () => {
+const ChiTietSanPhamAD: React.FC = () => {
     // Lấy mã sách từ URL
     const { maSach } = useParams();
 
@@ -28,18 +30,6 @@ const ChiTietSanPham: React.FC = () => {
     const [dangTaiDuLieu, setDangTaiDuLieu] = useState(true);
     const [baoLoi, setBaoLoi] = useState(null);
     const [soLuong, setSoLuong] = useState(1);
-    const tangSoLuong = () => {
-        const soLuongTonKho = (sach && sach.soLuong ? sach.soLuong : 0);
-        if (soLuong < soLuongTonKho) {
-            setSoLuong(soLuong + 1);
-        }
-    }
-    const giamSoLuong = () => {
-        if (soLuong > 2) {
-            setSoLuong(soLuong - 1);
-        }
-    }
-
     const handleSoLuongChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const soLuongMoi = parseInt(event.target.value);
         const soLuongTonKho = (sach && sach.soLuong ? sach.soLuong : 0);
@@ -47,14 +37,6 @@ const ChiTietSanPham: React.FC = () => {
             setSoLuong(soLuongMoi);
         }
     }
-
-
-        const handleMuaNgay=()=>{
-
-}
-        const handleThemVaoGioHang=()=>{
-
-}
 
     useEffect(() => {
             laySachTheoMaSach(maSachNumber)
@@ -111,36 +93,12 @@ const ChiTietSanPham: React.FC = () => {
                             <hr/>
                         </div>
                         <div className="col-4">
-                            <div>
-                                <div className="mb-2">Số lượng</div>
-                                <div className="d-flex align-items-center">
-                                    <button className="btn btn-outline-secondary me-2" onClick={giamSoLuong}>-</button>
-                                    <input
-                                        className="form-control text-center"
-                                        type="number"
-                                        value={soLuong}
-                                        min={1}
-                                        onChange={handleSoLuongChange}
-                                    />
-                                    <button className="btn btn-outline-secondary ms-2" onClick={tangSoLuong}>+</button>
-                                </div>
-                                {
-                                    sach.giaBan && (
-                                        <div className="mt-2 text-center">
-                                            Số tiền tạm tính <br/>
-                                            <h4>{soLuong * sach.giaBan} đ</h4>
-                                        </div>
-                                    )
-                                }
-                                <div className="d-grid gap-2">
-                                    <button type="button" className="btn btn-danger mt-3" onClick={handleMuaNgay}>Mua
-                                        ngay
-                                    </button>
-                                    <button type="button" className="btn btn-outline-secondary mt-2"
-                                            onClick={handleThemVaoGioHang}>Thêm vào giỏ hàng
-                                    </button>
-                                </div>
+
+                            <div className="row mt-4 mb-4">
+                                <DanhGiaSanPham maSach={maSachNumber}/>
                             </div>
+
+
                         </div>
 
 
@@ -149,11 +107,9 @@ const ChiTietSanPham: React.FC = () => {
                 </div>
                 {/*review*/}
 
-                <div className="row mt-4 mb-4">
-                    <DanhGiaSanPham maSach={maSachNumber}/>
-                </div>
+
             </div>
         </div>
             );
             }
-            export default ChiTietSanPham;
+            export default ChiTietSanPhamAD;

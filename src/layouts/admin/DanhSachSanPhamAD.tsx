@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import SachModel from "../../models/sachModel";
-import SachProps from "./components/sachProps";
 import {laySachTheoMaSach, layToanBoSach, timKiemSach} from "../../API/sachAPI";
 import { error } from "console";
-import {Link} from "react-router-dom";
-import {PhanTrang} from "../../layouts/Utils/PhanTrang";
-
+import { PhanTrang} from "../Utils/PhanTrang";
+import {NavLink} from "react-router-dom";
 interface DanhSachSanPhamProps {
     tuKhoaTimKiem: string;
     maTheLoai:number;
@@ -83,49 +81,56 @@ function DanhSachSanPhamAD({ tuKhoaTimKiem ,maTheLoai}: DanhSachSanPhamProps) {
             </div>
         );
     }
-
     return (
-        <div className="container">
-            <div className="row mt-4 mb-4">
+        <section>
+            {/*<Search*/}
+            {/*    search={search}*/}
+            {/*    setSearch={setSearch}*/}
+            {/*/>*/}
+            <table className="table table-bordered table-hover shadow">
+                <thead>
+                <tr className="text-center">
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Depatment</th>
+                    <th colSpan={3} >Actions</th>
+                </tr>
+                </thead>
 
-                    <table className="table table-bordered table-hover shadow">
-                        <thead>
-                        <tr className="text-center">
-                            <th >Tên Sách</th>
-                            <th>Giá bán</th>
-                            <th>Giá niêm yết</th>
-                            <th>Mô tả</th>
-                            <th>Số lượng</th>
-                            <th>Tên tác giả</th>
-                            <th>Trung bình xếp hạng</th>
-                            <th>Hinh anh</th>
-                            <th colSpan={2}>Hành đông</th>
+                <tbody className="text-center">
+                {danhSachQuyenSach
+
+                    .map((sach) => (
+                        <tr key={sach.maSach}>
+                            <td>{sach.tenSach}</td>
+                            <td>{sach.moTa}</td>
+                            <td>{sach.moTa}</td>
+                            <td>{sach.giaNiemYet}</td>
+                            <td className="mx-2">
+                                <NavLink
+                                    to={`/admin/sach/${sach.maSach}`}
+                                    className="btn btn-warning">
+                                    <i className="fa-solid fa-memo-circle-info"></i>
+
+                                </NavLink>
+                            </td>
+                            <td className="mx-2">
+                                {/*<button*/}
+                                {/*    className="btn btn-danger"*/}
+                                {/*    onClick={() =>*/}
+                                {/*        handleDelete(donHang.maDonHang)*/}
+                                {/*    }>*/}
+
+                                {/*</button>*/}
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody className="text-center">
-                        {danhSachQuyenSach.map((sach) => (
-                            <tr key={sach.maSach}>
-                                <td>{sach.tenSach}</td>
-                                <td>{sach.giaBan}</td>
-                                <td>{sach.giaNiemYet}</td>
-                                <td>{sach.moTa}</td>
-                                <td>{sach.soLuong}</td>
-                                <td>{sach.tenTacGia}</td>
-                                <td>{sach.trungBinhXepHang}</td>
-                              <td> <SachProps key={sach.maSach} sach={sach} /></td>
-
-                                <td>
-                                    <button className="btn btn-warning">Sửa</button>
-
-                                    <button className="btn btn-danger">Xóa</button>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-            </div>
+                    ))}
+                </tbody>
+            </table>
             <PhanTrang trangHienTai={trangHienTai} tongSoTrang={tongSoTrang} phanTrang={phanTrang} />
-        </div>
+        </section>
     );
 }
 
