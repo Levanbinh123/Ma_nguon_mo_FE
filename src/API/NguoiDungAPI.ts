@@ -8,13 +8,3 @@ async function request(duongDan:string){
     }
     return response.json();
 }
-export async function layToanBoNguoiDung():Promise<NguoiDungModel[]>{
-    const ketQua:NguoiDungModel[]=[];
-
-//xac dinh endpoint
-    const duongDan:string=''
-
-
-    return ketQua;
-
-}

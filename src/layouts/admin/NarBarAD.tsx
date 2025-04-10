@@ -1,18 +1,8 @@
 import React, {ChangeEvent, useState} from "react";
 import { Link } from "react-router-dom";
-interface NavbarADProps{
-    tuKhoaTimKiem: string;
-    setTuKhoaTimKiem: (tuKhoa: string) => void;
-}
-function NavBarAD ({tuKhoaTimKiem, setTuKhoaTimKiem}:NavbarADProps) {
-const [tuKhoaTamThoi,setTuKhoaTamThoi]=useState('');
-    const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>)=>{
-        setTuKhoaTamThoi(e.target.value);
-    }
 
-    const handleSearch=()=>{
-    setTuKhoaTimKiem(tuKhoaTamThoi);
-    }
+function NavBarAD () {
+
     return (
 
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
@@ -45,11 +35,7 @@ const [tuKhoaTamThoi,setTuKhoaTamThoi]=useState('');
                             </Link>
 
                         </li>
-                        {/* Tìm kiếm */}
-                        <div className="d-flex">
-                            <input className="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search" onChange={onSearchInputChange} value={tuKhoaTamThoi} />
-                            <button className="btn btn-outline-success" type="button" onClick={handleSearch}>Tìm kiếm</button>
-                        </div>
+
 
                     </ul>
                 </div>

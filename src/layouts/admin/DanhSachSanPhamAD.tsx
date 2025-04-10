@@ -1,23 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import SachModel from "../../models/sachModel";
 import {laySachTheoMaSach, layToanBoSach, timKiemSach} from "../../API/sachAPI";
 import { error } from "console";
 import { PhanTrang} from "../Utils/PhanTrang";
-import {NavLink} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
+import {Search} from "react-bootstrap-icons";
+import HinhAnhSanPham from "../products/components/hinhAnhSanPham";
+import sachModel from "../../models/sachModel";
+import {layToanBoAnhCuaMotSach} from "../../API/hinhAnhAPI";
+import Avata from "./Avata";
 interface DanhSachSanPhamProps {
     tuKhoaTimKiem: string;
     maTheLoai:number;
+    setTuKhoaTimKiem: (tuKhoa: string) => void;
 
 }
 
-function DanhSachSanPhamAD({ tuKhoaTimKiem ,maTheLoai}: DanhSachSanPhamProps) {
 
+function DanhSachSanPhamAD({ tuKhoaTimKiem ,maTheLoai, setTuKhoaTimKiem}: DanhSachSanPhamProps) {
     const [danhSachQuyenSach, setDanhSachQuyenSach] = useState<SachModel[]>([]);
     const [dangTaiDuLieu, setDangTaiDuLieu] = useState(true);
     const [baoLoi, setBaoLoi] = useState(null);
     const [trangHienTai, setTrangHienTai] = useState(1);
     const [tongSoTrang, setTongSoTrang] = useState(0);
     const [tongSoSach, setSoSach] = useState(0);
+    const [anhDaiDien, setAnhDaiDien] = useState<string | null>(null);
+    const [tuKhoaTamThoi,setTuKhoaTamThoi]=useState('');
+    const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>)=>{
+        setTuKhoaTamThoi(e.target.value);
+    }
+
+    const handleSearch=()=>{
+        setTuKhoaTimKiem(tuKhoaTamThoi);
+    }
+
+//lay anh sach
 
     useEffect(() => {
         if (tuKhoaTimKiem === '' &&maTheLoai==0 ) {
@@ -81,8 +98,53 @@ function DanhSachSanPhamAD({ tuKhoaTimKiem ,maTheLoai}: DanhSachSanPhamProps) {
             </div>
         );
     }
+    const handleDelete = (maSachCanXoa: number) => {
+        if (!window.confirm("Bạn có chắc chắn muốn xóa sách này?")) return;
+
+        fetch(`http://localhost:8080/sach/${maSachCanXoa}`, {
+            method: 'DELETE',
+        })
+            .then((response) => {
+                if (response.ok) {
+                    alert("Đã xóa sách thành công!");
+                    // Cập nhật lại danh sách bằng cách reload hoặc refetch
+                    setDanhSachQuyenSach(prev => prev.filter(sach => sach.maSach !== maSachCanXoa));
+                } else {
+                    alert("Gặp lỗi trong quá trình xóa sách!");
+                }
+            })
+            .catch((error) => {
+                console.error("Lỗi xóa sách:", error);
+                alert("Lỗi kết nối tới server!");
+            });
+    };
+
+
     return (
         <section>
+
+            <button>
+                <Link
+                    to={`/admin/them-sach`}
+                    className="btn btn-warning">
+                    <i className="fa-solid fa-memo-circle-info"></i>
+                    Thêm sách
+
+                </Link>
+            </button>
+            <div className="d-flex align-items-center gap-2" style={{ maxWidth: '400px' }}>
+                <input
+                    className="form-control"
+                    type="search"
+                    placeholder="Tìm kiếm"
+                    aria-label="Search"
+                    onChange={onSearchInputChange}
+                    value={tuKhoaTamThoi}
+                />
+                <button className="btn btn-outline-success" type="button" onClick={handleSearch}>
+                    <Search />
+                </button>
+            </div>
             {/*<Search*/}
             {/*    search={search}*/}
             {/*    setSearch={setSearch}*/}
@@ -90,11 +152,15 @@ function DanhSachSanPhamAD({ tuKhoaTimKiem ,maTheLoai}: DanhSachSanPhamProps) {
             <table className="table table-bordered table-hover shadow">
                 <thead>
                 <tr className="text-center">
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Depatment</th>
+
+                    <th>Giá bán</th>
+                    <th>Giá niêm yết</th>
+                    <th>Mô tả</th>
+                    <th>Số lượng</th>
+                    <th>Tên sách</th>
+                    <th>Tên tác giả</th>
+                    <th>Trung bình xếp hạng</th>
+                    <th>Hình ảnh</th>
                     <th colSpan={3} >Actions</th>
                 </tr>
                 </thead>
@@ -104,27 +170,58 @@ function DanhSachSanPhamAD({ tuKhoaTimKiem ,maTheLoai}: DanhSachSanPhamProps) {
 
                     .map((sach) => (
                         <tr key={sach.maSach}>
-                            <td>{sach.tenSach}</td>
-                            <td>{sach.moTa}</td>
-                            <td>{sach.moTa}</td>
+                            <td>{sach.giaBan}</td>
                             <td>{sach.giaNiemYet}</td>
-                            <td className="mx-2">
-                                <NavLink
-                                    to={`/admin/sach/${sach.maSach}`}
-                                    className="btn btn-warning">
-                                    <i className="fa-solid fa-memo-circle-info"></i>
+                            <td>{sach.moTa}</td>
+                            <td>{sach.soLuong}</td>
+                            <td>{sach.tenSach}</td>
+                            <td>{sach.tenTacGia}</td>
+                            <td>{sach.trungBinhXepHang}</td>
+                            <td>
 
-                                </NavLink>
+
+                                 {/*///anhsach*/}
+                                    <div className="col-4">
+                                        <Avata maSach={sach.maSach}/>
+                                    </div>
+
+
+
+
                             </td>
                             <td className="mx-2">
-                                {/*<button*/}
-                                {/*    className="btn btn-danger"*/}
-                                {/*    onClick={() =>*/}
-                                {/*        handleDelete(donHang.maDonHang)*/}
-                                {/*    }>*/}
 
-                                {/*</button>*/}
+                                <button>
+                                    <Link
+                                        to={`/admin/sach/${sach.maSach}`}
+                                        className="btn btn-warning">
+                                        <i className="fa-solid fa-memo-circle-info"></i>
+                                        Chi Tiết
+
+                                    </Link>
+                                </button>
+                                <button>
+                                    <Link
+                                        to={`/admin/cap-nhat/${sach.maSach}`}
+                                        className="btn btn-warning">
+                                        <i className="fa-solid fa-memo-circle-info"></i>
+                                        Cập nhật
+
+                                    </Link>
+                                </button>
+
+
+
+
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-danger"
+                                    onClick={() => handleDelete(sach.maSach)}
+                                >
+                                    Xóa sách
+                                </button>
                             </td>
+
                         </tr>
                     ))}
                 </tbody>

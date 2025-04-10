@@ -8,14 +8,15 @@ import DangKyNguoiDung from "./layouts/nguoiDung/dangKyNguoiDung";
 import KichHoatTaiKhoan from "./layouts/nguoiDung/kichHoatTaiKhoan";
 import DangNhap from "./layouts/nguoiDung/dangNhap";
 import Test from "./layouts/nguoiDung/text";
-import SachForm from "./layouts/admin/sachForm";
 import Footer from "./layouts/header-footer/Footer";
 import ADPage from "./layouts/admin/ADPage";
 import DanhSachDonHang from "./layouts/admin/danhSachDonHang";
 import NavBarAD from "./layouts/admin/NarBarAD";
-import DanhSachSanPhamAD from "./layouts/admin/DanhSachSanPhamAD";
 import ChiTietSanPhamAD from "./layouts/admin/chiTietSanPhamAD";
 import ChiTietDonHang from "./layouts/admin/chiTietDonHang";
+import SachForm from "./layouts/admin/SachForm";
+import SachUpdate from "./layouts/admin/SachUpdate";
+
 
 function AppContent() {
     const [tuKhoaTimKiem, setTuKhoaTimKiem] = useState('');
@@ -26,7 +27,7 @@ function AppContent() {
         <div className='App'>
 
             {/*NavbarAdmin*/}
-            {isAdminPath&&<NavBarAD tuKhoaTimKiem={tuKhoaTimKiem} setTuKhoaTimKiem={setTuKhoaTimKiem}/>}
+            {isAdminPath&&<NavBarAD />}
             {/* Ẩn Navbar nếu là trang admin */}
             {!isAdminPath && <Navbar tuKhoaTimKiem={tuKhoaTimKiem} setTuKhoaTimKiem={setTuKhoaTimKiem} />}
 
@@ -40,13 +41,15 @@ function AppContent() {
                 <Route path='/dang-nhap' element={<DangNhap />} />
                 <Route path='/test' element={<Test />} />
 
-                {/* Trang admin */}
 
-                <Route path='/admin' element={<ADPage tuKhoaTimKiem={tuKhoaTimKiem} />} />
+                {/* Trang admin */}
+                <Route path='/admin/cap-nhat/:maSach' element={<SachUpdate />} />
                 <Route path='/admin/them-sach' element={<SachForm />} />
+                <Route path='/admin' element={<ADPage tuKhoaTimKiem={tuKhoaTimKiem}  setTuKhoaTimKiem={setTuKhoaTimKiem}/>} />
                 <Route path='/admin/sach/:maSach' element={<ChiTietSanPhamAD />} />
                 <Route path='/admin/donhang' element={<DanhSachDonHang tuKhoaTimKiem={tuKhoaTimKiem} setTuKhoaTimKiem={setTuKhoaTimKiem} />} />
                 <Route path='/admin/donHang/:maDonHang' element={<ChiTietDonHang />} />
+
 
             </Routes>
 

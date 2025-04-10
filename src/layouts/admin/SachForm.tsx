@@ -10,18 +10,17 @@ const SachForm: React.FC = () => {
         moTa: '',
         soLuong: 0,
         tenTacGia: '',
+        isbn: '',
         trungBinhXepHang: 0,
     })
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
-        const token = localStorage.getItem('token');
         fetch(  'http://localhost:8080/sach',
             {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
-                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(sach)
             }
@@ -36,6 +35,7 @@ const SachForm: React.FC = () => {
                     moTa: '',
                     soLuong: 0,
                     tenTacGia: '',
+                    isbn: '',
                     trungBinhXepHang: 0,
                 })
             }else{
@@ -109,6 +109,14 @@ const SachForm: React.FC = () => {
                         required
                     />
 
+                    <label htmlFor='isbn'>ISBN</label>
+                    <input
+                        className='form-control'
+                        type='isbn'
+                        value={sach.isbn}
+                        onChange={(e) => setSach({ ...sach, isbn: e.target.value })}
+                        required
+                    />
 
                     <button type='submit' className='btn btn-success mt-2'>Lưu</button>
                 </form>

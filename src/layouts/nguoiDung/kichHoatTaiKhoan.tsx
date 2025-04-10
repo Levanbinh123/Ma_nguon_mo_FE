@@ -23,7 +23,9 @@ function KichHoatTaiKhoan(){
         console.log("MaKichHoat:", maKichHoat);
         try {
             const url:string = `http://localhost:8080/tai-khoan/kich-hoat?email=${email}&maKichHoat=${maKichHoat}`;
-            const response = await fetch(url,  {method: "GET"} );
+            const response =
+                await fetch(url,
+                    {method: "GET"} );
 
             if(response.ok){
                 setDaKichHoat(true);
@@ -36,7 +38,7 @@ function KichHoatTaiKhoan(){
     }
     return (
         <div>
-            <h1>Kích hoạt tai khoản</h1>
+            <h1>Kích hoạt tài khoản</h1>
             {
                 daKichHoat
                     ? (<p> Tài khoản đã kích hoạt thành công, bạn hãy đăng nhập để tiếp tục sử dụng dịch vụ!</p>)
