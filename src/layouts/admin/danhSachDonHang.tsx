@@ -80,6 +80,26 @@ function DanhSachSanPham({tuKhoaTimKiem,setTuKhoaTimKiem}:DonHangProps){
         );
     }
 
+    const handleDelete = (maDonHangCanXoa: number) => {
+        if (!window.confirm("Bạn có chắc chắn muốn xóa sách này?")) return;
+
+        fetch(`http://localhost:8080/donhang/${maDonHangCanXoa}`, {
+            method: 'DELETE',
+        })
+            .then((response) => {
+                if (response.ok) {
+                    alert("Đã xóa đơn hàng thành công!");
+                    // Cập nhật lại danh sách bằng cách reload hoặc refetch
+                    setDanhSachDonHang(prev => prev.filter(donHang => donHang.maDonHang !== maDonHangCanXoa));
+                } else {
+                    alert("Gặp lỗi trong quá trình xóa đơn hàng!");
+                }
+            })
+            .catch((error) => {
+                console.error("Lỗi xóa đơn hàng:", error);
+                alert("Lỗi kết nối tới server!");
+            });
+    };
     return (
         <section>
             {/* Tìm kiếm */}
@@ -87,11 +107,12 @@ function DanhSachSanPham({tuKhoaTimKiem,setTuKhoaTimKiem}:DonHangProps){
             <table className="table table-bordered table-hover shadow">
                 <thead>
                 <tr className="text-center">
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Depatment</th>
+                    <th>Chi phí giao hàng</th>
+                    <th>Chi phí thanh toán</th>
+                    <th>Địa chỉ mua hàng</th>
+                    <th>Địa chỉ nhận hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Tổng tiền sản phẩm</th>
                     <th colSpan={3} >Actions</th>
                 </tr>
                 </thead>
@@ -103,24 +124,39 @@ function DanhSachSanPham({tuKhoaTimKiem,setTuKhoaTimKiem}:DonHangProps){
                         <tr key={donHang.maDonHang}>
                             <td>{donHang.chiPhiGiaoHang}</td>
                             <td>{donHang.chiPhiThanhToan}</td>
-                            <td>{donHang.chiPhiThanhToan}</td>
-                            <td>{donHang.chiPhiThanhToan}</td>
-                            <td className="mx-2">
-                                <NavLink
-                                    to={`/admin/donHang/${donHang.maDonHang}`}
-                                    className="btn btn-warning">
-                                    <i className="fa-solid fa-memo-circle-info"></i>
+                            <td>{donHang.diaChiMuaHang}</td>
+                            <td>{donHang.diaChiNhanHang}</td>
+                            <td>{donHang.tongTien}</td>
+                            <td>{donHang.tongTienSanPham}</td>
 
-                                </NavLink>
-                            </td>
+
                             <td className="mx-2">
-                                {/*<button*/}
-                                {/*    className="btn btn-danger"*/}
-                                {/*    onClick={() =>*/}
-                                {/*        handleDelete(student.id)*/}
-                                {/*    }>*/}
-                                {/*    <FaTrashAlt />*/}
-                                {/*</button>*/}
+
+                                <button>
+                                    <Link
+                                        to={`/admin/sach/${donHang.maDonHang}`}
+                                        className="btn btn-warning">
+                                        <i className="fa-solid fa-memo-circle-info"></i>
+                                        Chi Tiết
+
+                                    </Link>
+                                </button>
+                                <button>
+                                    <Link
+                                        to={`/admin/cap-nhat/${donHang.maDonHang}`}
+                                        className="btn btn-warning">
+                                        <i className="fa-solid fa-memo-circle-info"></i>
+                                        Cập nhật
+
+                                    </Link>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-danger"
+                                    onClick={() => handleDelete(donHang.maDonHang)}
+                                >
+                                    Xóa
+                                </button>
                             </td>
                         </tr>
                     ))}

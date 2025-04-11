@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
-import {Link, NavLink} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
 import {MenuButton, Search} from "react-bootstrap-icons";
 import {isToken} from "../Utils/JwtService";
 
@@ -9,7 +9,7 @@ interface NavbarProps {
 }
 
 function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
-
+    const navigate = useNavigate();
     const [tuKhoaTamThoi, setTuKhoaTamThoi] = useState('');
 
     const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>)=>{
@@ -19,6 +19,10 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
     const handleSearch= ()=>{
         setTuKhoaTimKiem(tuKhoaTamThoi);
     }
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Xóa token
+        navigate('/dang-nhap'); // Điều hướng về trang đăng nhập
+    };
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
@@ -90,6 +94,9 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
                             </a>
                         </li>
                     </ul>
+                    <button onClick={handleLogout} className="btn btn-danger">
+                        Đăng xuất
+                    </button>
 
                 </div>
             </div>

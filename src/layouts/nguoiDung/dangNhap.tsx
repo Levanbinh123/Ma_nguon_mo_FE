@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import {useNavigate} from "react-router-dom";
 
 const DangNhap = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const navigate = useNavigate();
 
     const handleLogin = () => {
         const loginRequest = {
@@ -35,6 +37,7 @@ const DangNhap = () => {
                 localStorage.setItem('token', jwt);
                 // Điều hướng đến trang chính hoặc thực hiện các tác vụ sau đăng nhập thành công
                 setError('Đăng nhập thành công!');
+                navigate('/');//chuyen den trang chu
             }
         ).catch((error) => {
                 // Xử lý lỗi đăng nhập

@@ -25,13 +25,13 @@ function NavBarAD () {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" to={"/view-students"}>
-                                View All Students
+                            <Link className="nav-link active" aria-current="page" to={"/admin"}>
+                                Sách
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to={"/add-students"}>
-                                Add New Students
+                            <Link className="nav-link" to={"/admin/donHang"}>
+                                Đơn hàng
                             </Link>
 
                         </li>
